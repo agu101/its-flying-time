@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>flytime | plan</title>
+    <meta name="author" content="Alan Gu">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="main-title">it's flying time</h1>
+        <nav class="nav-bar">
+            <ul class="navigation">
+                <li><a href="index.html" hidden>plan</a></li>
+                <li><a href="about.html">about</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="search-body">
+        <h2 class="section-header">plan a trip!</h2>
+        <div class="search-bar">
+            <div class="search-input">
+                <div>from</div>
+                <input class="from-search" type="text" placeholder="here">
+                <ul class="from-dropdown dropdown">
+                </ul>
+            </div>
+            <div class="search-input">
+                <div>to</div>
+                <input class="to-search" type="text" placeholder="anywhere">
+                <ul class="to-dropdown dropdown">
+                </ul>
+            </div>
+            <div class="search-input">
+                <div>when</div>
+                <input class="date-search departure" type="date">
+            </div>
+            <!-- <span>
+                <span>Return</span>
+                <input class="date-search return search-input" type="date">
+            </span> -->
+            <div><button class="search-button">search</button></div>
+        </div>
+        <br>
+        <h4 class="results-message">RESULTS</h4>
+        <hr>
+        <div class="search-result">
+            <div class="listing">
+                <span>@</span>
+                <span class="result-info result-price"> $500</span>
+                <span class="result-info result-date">/ 01-16</span>
+                <span class="result-info result-air">/ Airline</span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <span class="footer-text">it's flying time - powered by skyscanner flight search API</span>
+    </footer>
+</body>
+
+</html>
