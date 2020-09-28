@@ -214,14 +214,14 @@ function createListing(quote, map) {
     let listing = document.createElement("div");
     listing.setAttribute("class", "listing");
     // Price
-    let price = document.createElement("span");
+    let price = document.createElement("div");
     price.innerHTML = "$" + quote.MinPrice;
     // airline depart
 
-    let dtime = document.createElement("span");
+    let dtime = document.createElement("div");
     dtime.innerHTML = "\/ " + quote.OutboundLeg.DepartureDate.slice(5, 10);
 
-    let dairline = document.createElement("span");
+    let dairline = document.createElement("div");
     dairline.innerHTML = "\/ " + map.get(quote.OutboundLeg.CarrierIds[0]);
 
     price.setAttribute("class", "result-info result-price");
@@ -240,9 +240,7 @@ function createListing(quote, map) {
 
     // arrive.appendChild(atime);
     // arrive.appendChild(aairline);
-    let spacer = document.createElement("span");
-    spacer.innerHTML = "@";
-    listing.appendChild(spacer);
+
     listing.appendChild(price);
     listing.appendChild(dtime);
     listing.appendChild(dairline);
