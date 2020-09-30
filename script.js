@@ -12,17 +12,23 @@ const destination = document.querySelector('.to-search');
 const ddate = document.querySelector('.departure');
 const searchbutton = document.querySelector('.search-button');
 
-var originStore = new Map();
-var destStore = new Map();
 //origin.addEventListener("keyup", fetchPlaces(origin.value, originStore, origin));
-origin.addEventListener("keyup", fetchOrigin);
-destination.addEventListener("keyup", fetchDestination);
+let timeout;
+origin.addEventListener("keyup", e => {
+    clearTimeout(timeout);
+    timeout = setTimeout(fetchOrigin, 500, e);
+});
+destination.addEventListener("keyup", e => {
+    clearTimeout(timeout);
+    timeout = setTimeout(fetchDestination, 500, e);
+});
 searchbutton.addEventListener("click", queryFlights);
 
 // Gets the dropdown elements
 const fdrop = document.querySelector('.from-dropdown');
 const tdrop = document.querySelector('.to-dropdown');
-
+let originStore = new Map();
+let destStore = new Map();
 // For determining whether or not a dropdown value should be used
 var originClicked = false;
 var destClicked = false;
@@ -33,15 +39,26 @@ var countryID;
 // helpers to call fetchPlaces from eventlisteners
 function fetchOrigin(e) {
     let backspace = (e.keyCode === 8);
-    fetchPlaces(origin.value, originStore, fdrop, backspace);
+    fetchPlaces(origin.value, originStore, backspace, fdrop);
+    setTimeout(createDropdown, 1000, originStore, fdrop);
 }
 function fetchDestination(e) {
     let backspace = (e.keyCode === 8);
-    fetchPlaces(destination.value, destStore, tdrop, backspace);
+    fetchPlaces(destination.value, destStore, backspace, tdrop);
+    setTimeout(createDropdown, 1000, destStore, tdrop);
 }
+
+// creates a loading message for dropdown
+function loadingMessage(obj) {
+    obj.textContent = "";
+    let message = document.createElement("li");
+    message.textContent = "loading...";
+    obj.appendChild(message);
+}
+
 // Based on user input fetches places for both origin and destination and creates
 // dropdown
-function fetchPlaces(place, placeStore, dropDownObj, backspace) {
+function fetchPlaces(place, placeStore, backspace, obj) {
     //console.log("fetchPlace");
     if (backspace) {
         originClicked = false;
@@ -51,33 +68,38 @@ function fetchPlaces(place, placeStore, dropDownObj, backspace) {
         //console.log("<3");
         // empty storage
         placeStore.clear();
-    } else if ((place.length >= 3) && (placeStore.size > 0) && !backspace) {
-        //console.log(">3");
-        // filter the storage by matching to place
-        let placenames = placeStore.keys();
-        for (name of placenames) {
-            if (!name.toLowerCase().startsWith(place.toLowerCase())) {
-                //console.log("Deleted: " + name);
-                placeStore.delete(name);
+    } else if ((place.length >= 3) && (placeStore.size > 0)) {
+        console.log(">3");
+        loadingMessage(obj);
+        if (!backspace) {
+            // filter the storage by matching to place
+            let placenames = placeStore.keys();
+            for (name of placenames) {
+                if (!name.toLowerCase().startsWith(place.toLowerCase())) {
+                    //console.log("Deleted: " + name);
+                    placeStore.delete(name);
+                }
             }
-        }
-        // handles case when backspace is pressed and we shoudl requery but then 
-        // narrow down by the input for a more uniform UX
-    } else if ((place.length >= 3) && (placeStore.size > 0) && backspace) {
-        queryPlaces(place, placeStore);
-        let placenames = placeStore.keys();
-        for (name of placenames) {
-            if (!name.toLowerCase().startsWith(place.toLowerCase())) {
-                //console.log("Deleted: " + name);
-                placeStore.delete(name);
+        } else {
+            // handles case when backspace is pressed and we should requery but then 
+            // narrow down by the input for a more uniform UX
+            console.log("backspace");
+            queryPlaces(place, placeStore);
+            let placenames = placeStore.keys();
+            for (name of placenames) {
+                if (!name.toLowerCase().startsWith(place.toLowerCase())) {
+                    //console.log("Deleted: " + name);
+                    placeStore.delete(name);
+                }
             }
         }
     } else {
+        loadingMessage(obj);
         // call places API and populate the data structure with placename,
         //country name, placeID
         queryPlaces(place, placeStore);
     }
-    createDropdown(placeStore, dropDownObj);
+    // createDropdown(placeStore, dropDownObj);
 }
 
 // Calls places API and populates input data structure
@@ -122,6 +144,13 @@ function createDropdown(placeStore, dropDownObj) {
     });
 }
 
+// creates a loading message for dropdown
+function loadingMessage(obj) {
+    obj.textContent = "";
+    let message = document.createElement("li");
+    message.textContent = "loading...";
+    obj.appendChild(message);
+}
 
 // Handles if dropdown item is clicked
 function placeClicked(e) {
