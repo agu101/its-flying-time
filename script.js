@@ -69,7 +69,7 @@ function fetchPlaces(place, placeStore, backspace, obj) {
         // empty storage
         placeStore.clear();
     } else if ((place.length >= 3) && (placeStore.size > 0)) {
-        console.log(">3");
+        // console.log(">3");
         loadingMessage(obj);
         if (!backspace) {
             // filter the storage by matching to place
@@ -83,7 +83,6 @@ function fetchPlaces(place, placeStore, backspace, obj) {
         } else {
             // handles case when backspace is pressed and we should requery but then 
             // narrow down by the input for a more uniform UX
-            console.log("backspace");
             queryPlaces(place, placeStore);
             let placenames = placeStore.keys();
             for (name of placenames) {
